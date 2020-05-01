@@ -42,13 +42,13 @@ public class CarroDTO {
 		this.dataAtualizacao = dataAtualizacao;
 	}
 
-	public CarroDTO(CreateCarroDTO transacaoDTO, Integer id) {
+	public CarroDTO(CreateCarroDTO carroDTO, Integer id) {
 		this.id = id;
-		this.marca = transacaoDTO.getMarca();
-		this.modelo = transacaoDTO.getModelo();
-		this.ano = transacaoDTO.getAno();
-		this.placa = transacaoDTO.getPlaca();
-		this.status = transacaoDTO.getStatus();
+		this.marca = carroDTO.getMarca();
+		this.modelo = carroDTO.getModelo();
+		this.ano = carroDTO.getAno();
+		this.placa = carroDTO.getPlaca();
+		this.status = carroDTO.getStatus();
 	}
 
 	public CarroDTO(Carro carro) {
