@@ -56,18 +56,18 @@ public class ViagemController {
 		return service.findById(id);
 	}
 
-	@ApiOperation(value = "Lista todas as viagens")
+	@ApiOperation(value = "Consulta uma viagem pelo id da viagem e id do carro")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Viagens listados com sucesso"),
 			@ApiResponse(code = 401, message = "Você não tem autorização"),
 			@ApiResponse(code = 403, message = "É proibido acessar esse recurso"),
 			@ApiResponse(code = 404, message = "O recurso não foi encontrado") })
-	@GetMapping("{idViagem}/carro/{idCarro}")
-	public ViagemDTO findByIdViagemIdCarro(@PathVariable Integer idViagem, @PathVariable Integer idCarro) {
-		return service.findByIdViagemIdCarro(idViagem, idCarro);
+	@GetMapping("{id}/carro/{idCarro}")
+	public ViagemDTO findByIdViagemIdCarro(@PathVariable Integer id, @PathVariable Integer idCarro) {
+		return service.findByIdViagemIdCarro(id, idCarro);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Obtém uma viagem a partir de um carro")
+	@ApiOperation(value = "Lista todas as viagens feitas por um carro")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Viagem encontrado"),
 			@ApiResponse(code = 401, message = "Você não tem autorização"),
 			@ApiResponse(code = 403, message = "É proibido acessar esse recurso"),

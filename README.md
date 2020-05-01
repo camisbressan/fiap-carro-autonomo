@@ -60,6 +60,14 @@ http://localhost:8081/swagger-ui.html
 
 ![Swagger](docs/Swagger.jpg)
 
+## Rotas para gestão de viagens
+
+A aplicação permite a consulta, criação, edição e exclusão de uma viagem, além da rota de consultar uma viagem pelo id da viagem e id do carro, e listar todas as viagens feitas por um carro.
+
+http://localhost:8081/swagger-ui.html
+
+![SwaggerViagem](docs/SwaggerViagem.jpg)
+
 ## Testes unitários
 
 
