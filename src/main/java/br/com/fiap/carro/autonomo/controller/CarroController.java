@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,8 +42,12 @@ public class CarroController {
 			@ApiResponse(code = 403, message = "É proibido acessar esse recurso"),
 			@ApiResponse(code = 404, message = "O recurso não foi encontrado") })
 	@GetMapping
-	public List<CarroDTO> getAll() {
-		return service.findAll();
+	public List<CarroDTO> getAll(@RequestParam(name = "status", required = false) String status) {
+		if (status == null) {
+			return service.findAll();
+		} else {
+			return service.findAllByStatus(status);
+		}
 	}
 
 	@ResponseStatus(HttpStatus.OK)

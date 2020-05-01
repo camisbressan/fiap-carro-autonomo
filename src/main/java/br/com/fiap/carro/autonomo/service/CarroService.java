@@ -10,6 +10,8 @@ public interface CarroService {
 
 	List<CarroDTO> findAll();
 
+	List<CarroDTO> findAllByStatus(String status);
+	
 	CarroDTO findById(Integer id);
 
 	CarroDTO create(CreateCarroDTO createCarroDTO);

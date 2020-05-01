@@ -30,6 +30,13 @@ public class CarroServiceImpl implements CarroService {
 	}
 
 	@Override
+	public List<CarroDTO> findAllByStatus(String status) {
+		List<Carro> transacoesList = carroRepository.findAllByStatus(status);
+		return transacoesList.stream().map(CarroDTO::new).collect(Collectors.toList());
+	}
+
+	
+	@Override
 	public CarroDTO findById(Integer id) {
 		return new CarroDTO(
 				carroRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
