@@ -1,0 +1,10 @@
+.red{
+    color: rgb(227, 94, 107);
+    vertical-align: middle;
+    font-size: x-small;
+}
+.footer span{
+    align-items: center;
+    flex: auto;
+    font-size: small;
+}
