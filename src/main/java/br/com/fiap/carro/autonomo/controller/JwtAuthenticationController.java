@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api(value = "Autenticação")
 @RequestMapping("/v1/authenticate")
 public class JwtAuthenticationController {
