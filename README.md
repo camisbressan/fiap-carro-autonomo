@@ -68,6 +68,10 @@ http://localhost:8081/swagger-ui.html
 
 ![SwaggerViagem](docs/SwaggerViagem.jpg)
 
+Listar viagens (http://localhost:8080/v1/viagem) utilizando o token:
+
+![PostmanViagem](docs/Postman_Viagens.jpg)
+
 ## Testes unitários
 
 
