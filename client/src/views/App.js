@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import Car from './Car';
 import './App.css';
 
 class App extends Component {
@@ -8,8 +9,9 @@ class App extends Component {
     loading: true,
     baseUrl: "http://localhost:8080/v1/",
     user: "fiapcarroautonomo",
-    password: "password", 
-    accessToken: ""
+    password: "password",
+    accessToken: "",
+    carScreen: false
   };
 
   componentWillMount() {
@@ -32,7 +34,7 @@ class App extends Component {
     }).then(function (response) {
       return response.json();
     }).then((data) => {
-      console.log(data.token);
+      console.log('gerando token ' + data.token)
       this.setState({ accessToken: data.token }, this.getCars)
     });
   }
@@ -42,7 +44,7 @@ class App extends Component {
       method: 'GET',
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmaWFwY2Fycm9hdXRvbm9tbyIsImV4cCI6MTU4OTM4NTgyMCwiaWF0IjoxNTg5MjA1ODIwfQ.HwMSAg-zdYr5yBZH8PG7dttkCE53H3nLQ4Y-X0wV462hsja9NnIgMFYHMXogYZUTP0Mko__glRqhEAxMreRm0Q',
+        'Authorization': 'Bearer ' + this.state.accessToken,
       },
     }).then((response) => response.json()
       .then((cars) => {
@@ -54,44 +56,21 @@ class App extends Component {
     );
   }
 
-  handleChange = (event) => {
-    this.setState({ text: event.target.value });
-  }
-
-  postComments = () => {
-    let { text } = this.state
-
-    fetch(this.state.baseUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        text: text,
-      }),
-    }).then(function (response) {
-      return response.json();
-    }).then((data) => {
-      this.setState({ loading: false, text: "" }, this.getComments)
-    });
-  }
-
-  playerSound = (id) => {
-    
-      let audio = new Audio("../../audio/comment_31.wav");
-      console.log(audio);
-      audio.play();
-  }
+  carScreen = () => {
+    this.setState({carScreen: true });
+  };
 
   render() {
-    const { comments } = this.state
 
     return (
-      <div className="app center">    
+      <div className="app center">
+        {this.state.carScreen === true ?
+        <Car /> :
         <div className="content">
-          <h4>Inicie sua via</h4>
-          </div>
+          <h4>Carro Autônomo.</h4>
+          <button onClick={this.carScreen}>Cadastrar veículo</button>
+        </div>
+        }
       </div>
     );
   }
