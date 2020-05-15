@@ -12,7 +12,6 @@ code {
     monospace;
 }
 
-
 .center {
   display: flex;
   align-items: center;
@@ -23,8 +22,8 @@ code {
   width: 100%;
 }
 
-.w80 {
-  width: 80%;
+.w50 {
+  width: 40%;
 }
 
 .mt10 {
@@ -32,7 +31,34 @@ code {
 }
 
 button {
-  background-color: #d3d3d3;
-  border-radius: 5px;
-  padding: 5px 5px 5px 5px;
+  background-color: black;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-weight: 800;
+  color: white;
+}
+
+select,
+label,
+input{
+  margin: 5px;
+  width: 80%;
+  padding: 5px;
+  display: flex;
+}
+
+.autocomplete-dropdown-container{
+  position: "absolute";
+  z-index: 1000;
+}
+
+.autocomplete-dropdown-container {
+  border-bottom: honeydew;
+  border-left: honeydew;
+  border-right: honeydew;
+  border-top: 1px solid #e6e6e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: absolute;
+  z-index: 1000;
+  border-radius: 0 0 2px 2px;
 }
