@@ -18,6 +18,10 @@ code {
   justify-content: center;
 }
 
+.end {
+  align-items: flex-end;
+}
+
 .w100 {
   width: 100%;
 }

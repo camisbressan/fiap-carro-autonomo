@@ -73,9 +73,6 @@ class Car extends Component {
   }
 
   render() {
-
-    let { baseUrl, accessToken } = this.props;
-    console.log(baseUrl);
     return (
       <div className="container center">
         <h2>Cadastre um carro novo veículo</h2>

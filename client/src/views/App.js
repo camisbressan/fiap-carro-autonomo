@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import Car from './Car';
 import './App.css';
+import Directions from "../components/Directions/DirectionsIndex";
 import LocationSearchInput from '../components/LocationSearchInput';
 
 class App extends Component {
@@ -15,11 +16,13 @@ class App extends Component {
       password: "password",
       accessToken: "",
       carScreen: false,
-      carIdSelected: undefined,
+      carIdSelected: "",
       adress: "",
       latLngOrigin: "",
       latLngDestination: "",
-      result: ""
+      result: "",
+      showMap: false,
+      trip: ""
     };
 
     this.setGeolocationOrigin = this.setGeolocationOrigin.bind(this);
@@ -34,7 +37,6 @@ class App extends Component {
 
   postAuth = () => {
     let { user, password } = this.state
-    console.log(this.state.baseUrl + "authenticate")
     fetch(this.state.baseUrl + "authenticate", {
       method: 'POST',
       headers: {
@@ -48,7 +50,6 @@ class App extends Component {
     }).then(function (response) {
       return response.json();
     }).then((data) => {
-      console.log('gerando token ' + data.token)
       this.setState({ accessToken: data.token }, this.getCars)
     }).catch(
       error => {
@@ -68,8 +69,7 @@ class App extends Component {
     }).then((response) => response.json()
       .then((result) => {
         let cars = result.filter(car => car.status === "Disponível");
-        console.log(cars)
-        this.setState({ cars, loading: false })
+        this.setState({ cars, loading: false, carIdSelected: cars[0].id })
       })
     ).catch(
       error => {
@@ -80,10 +80,10 @@ class App extends Component {
   }
 
   requestTrip = () => {
-    let { latLngDestination, latLngOrigin, baseUrl, accessToken } = this.state
+    let { latLngDestination, latLngOrigin, baseUrl, accessToken, carIdSelected } = this.state
     let date = new Date().toLocaleString();
+    date = date.split("/").join("-");
 
-    console.log(baseUrl + "viagem")
     fetch(baseUrl + "viagem", {
       method: 'POST',
       headers: {
@@ -94,8 +94,8 @@ class App extends Component {
       body: JSON.stringify({
         distanciaPercorrida: "0",
         horaFim: "",
-        horaInicio: date,
-        idCarro: this.state.carIdSelected,
+        horaInicio: "",
+        idCarro: carIdSelected.toString(),
         latitudeDestinoUsuario: latLngOrigin.lat,
         latitudeOrigemUsuario: latLngOrigin.lng,
         longitudeDestinoUsuario: latLngDestination.lat,
@@ -106,7 +106,7 @@ class App extends Component {
     }).then(function (response) {
       return response.json();
     }).then((data) => {
-      console.log(data);
+      this.setState({ trip: data }, this.showMap);
     }).catch(
       error => {
         console.log(error)
@@ -116,8 +116,43 @@ class App extends Component {
 
   }
 
+  cancelTrip = () => {
+    let { latLngDestination, latLngOrigin, baseUrl, accessToken, carIdSelected } = this.state
+    let date = new Date().toLocaleString();
+    date = date.split("/").join("-");
+
+    fetch(baseUrl + "viagem", {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+      },
+      body: JSON.stringify({
+        distanciaPercorrida: "0",
+        horaFim: "",
+        horaInicio: "",
+        idCarro: carIdSelected.toString(),
+        latitudeDestinoUsuario: latLngOrigin.lat,
+        latitudeOrigemUsuario: latLngOrigin.lng,
+        longitudeDestinoUsuario: latLngDestination.lat,
+        longitudeOrigemUsuario: latLngDestination.lng,
+        status: "Finalizada",
+        valor: 0
+      }),
+    }).then(function (response) {
+      return response.json();
+    }).then((data) => {
+      this.showMap();
+    }).catch(
+      error => {
+        console.log(error)
+        this.setState({ result: "Erro ao solicitar viagem, tente novamente mais tarde" }, this.showMap())
+      }
+    );;
+  }
+
   handleCarChange = (event) => {
-    console.log(event.target.value);
     this.setState({ carIdSelected: event.target.value });
   }
 
@@ -125,6 +160,9 @@ class App extends Component {
     this.setState({ carScreen: !this.state.carScreen });
   };
 
+  showMap = () => {
+    this.setState({ showMap: !this.state.showMap });
+  };
 
   setGeolocationOrigin = (latLngOrigin) => {
     this.setState({
@@ -140,7 +178,7 @@ class App extends Component {
 
   render() {
 
-    
+
     let { cars, accessToken, baseUrl } = this.state
 
     return (
@@ -175,13 +213,27 @@ class App extends Component {
             ) : <h4 style={{ color: "red" }} className="item">Sem veículos disponíveis</h4>}
 
             <a className="item" style={{ color: "blue", justifyContent: "flex-end" }} onClick={this.carScreen}>Deseja cadastrar um veiculo?</a>
-
-            <div className="mt10" style={{ justifyContent: "flex-end" }} >
-              <h4>{this.state.resut}</h4>
+            <h4>{this.state.resut}</h4>
+            <div className="mt10 end">              
               <button className="w50" onClick={this.requestTrip}>Iniciar viagem</button>
             </div>
           </div>
         }
+        <div>
+          {this.state.showMap ? (
+            <>
+              <Directions
+                latLngOrigin={this.state.latLngOrigin}
+                latLngDestination={this.state.latLngDestination}
+              />
+
+              <div className="mt10 end">
+                <button className="w50" onClick={this.cancelTrip}>Cancelar Viagem</button>
+              </div>
+            </>
+          ) : null
+          }
+        </div>
       </div>
 
     );
@@ -190,121 +242,3 @@ class App extends Component {
 }
 
 export default App;
-/*import React, { Component } from 'react'
-import Car from './Car';
-import Map from '../components/Directions/Map';
-import './App.css';
-
-class App extends Component {
-
-  state = {
-    cars: [],
-    loading: true,
-    baseUrl: "http://localhost:8080/v1/",
-    user: "fiapcarroautonomo",
-    password: "password",
-    accessToken: "",
-    carScreen: false,
-    carIdSelected: undefined
-  };
-
-  componentWillMount() {
-    this.postAuth();
-  }
-
-  postAuth = () => {
-    let { user, password } = this.state
-    console.log(this.state.baseUrl + "authenticate")
-    fetch(this.state.baseUrl + "authenticate", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        usuario: user,
-        senha: password,
-      }),
-    }).then(function (response) {
-      return response.json();
-    }).then((data) => {
-      console.log('gerando token ' + data.token)
-      this.setState({ accessToken: data.token }, this.getCars)
-    });
-  }
-
-  getCars = () => {
-    fetch(this.state.baseUrl + "carro", {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': 'Bearer ' + this.state.accessToken,
-      },
-    }).then((response) => response.json()
-      .then((result) => {
-        let cars = result.filter(car => car.status === "Disponível");
-        console.log(cars)
-        this.setState({ cars, loading: false })
-      })
-    ).catch(
-      error => console.log(error)
-    );
-  }
-
-  handleCarChange = (event) => {
-    this.setState({ carIdSelected: event.target.value });
-  }
-
-  carScreen = () => {
-    this.setState({ carScreen: true });
-  };
-
-  render() {
-
-    let { cars } = this.state
-
-    return (
-      <div className="app center">
-        <div style={{ margin: '100px' }}>
-				<Map
-					google={this.props.google}
-					center={{lat: -23.5740998, lng: -46.6254161}}
-					height='300px'
-					zoom={15}
-				/>
-			</div>
-        {this.state.carScreen === true ?
-          <Car /> :
-          <div className="content">
-            <h4>Inicie sua viagem.</h4>
-
-
-            {cars.length > 0 ? (
-              <>
-                <label className="item">Escolha um veículo:</label>
-                <select className="item" value={this.state.carIdSelected} onChange={this.handleCarChange}>
-                  {cars.map((car) => {
-                    return (
-                      <option key={car.id} value="Disponível">{car.marca} {car.modelo}</option>
-                    )
-                  })}
-                </select>
-
-                <label className="item">Origem:</label>
-                <input className="item" type="text" value={this.state.plaque} onChange={this.handlePlaqueChange} />
-
-                <label className="item">Destino:</label>
-                <input className="item" type="text" value={this.state.plaque} onChange={this.handlePlaqueChange} />
-
-              </>
-            ) : <label className="item">Sem veículos disponíveis</label>}
-            <button onClick={this.carScreen}>Cadastrar veículo</button>
-          </div>
-        }
-      </div>
-    );
-  }
-}
-
-export default App;
-*/
