@@ -18,7 +18,6 @@ class LocationSearchInput extends Component {
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(latLng => {
-        console.log(latLng)
         this.props.setGeolocationCallback(latLng)        
       })
       .catch(error => console.error('Error', error));

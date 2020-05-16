@@ -31,8 +31,6 @@ class Car extends Component {
   }
 
   handleStateChange = (event) => {
-
-    console.log(event.target.value);
     this.setState({ stats: event.target.value });
   }
 

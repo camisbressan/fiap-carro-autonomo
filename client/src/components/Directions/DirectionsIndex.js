@@ -52,7 +52,6 @@ componentWillReceiveProps(){
       strokeColor: "#f68f54"
     }]
 
-    console.log(directions)
 
     let DummyLocations = directions.map(elem => {
       return createLocationObject(

@@ -116,7 +116,7 @@ class App extends Component {
 
   }
 
-  cancelTrip = () => {
+  finishTrip = () => {
     let { latLngDestination, latLngOrigin, baseUrl, accessToken, carIdSelected } = this.state
     let date = new Date().toLocaleString();
     date = date.split("/").join("-");
@@ -228,7 +228,7 @@ class App extends Component {
               />
 
               <div className="mt10 end">
-                <button className="w50" onClick={this.cancelTrip}>Cancelar Viagem</button>
+                <button className="w50" onClick={this.finishTrip}>Finalizar Viagem</button>
               </div>
             </>
           ) : null
